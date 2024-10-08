@@ -8,7 +8,7 @@ from langchain_groq import ChatGroq
 os.environ["GROQ_API_KEY"] = config("GROQ_API_KEY")   
 
 
-class AIborn:
+class AIbot:
     def __init__(self):
         self.__chat = ChatGroq(model="llama-3.1-70b-versatile")
 
