@@ -16,7 +16,7 @@ class AIbot:
         prompt = PromptTemplate(
             input_variables=["texto"],
             template=''''
-            Você é um tradutor de textos que traduz o texto do usuário para Inglês.
+            Você é um tradutor de textos que traduz o texto do usuário para espanhol.
             <texto>{texto}</texto>'''
         )
         chain = prompt | self.__chat | StrOutputParser()
