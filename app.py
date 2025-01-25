@@ -9,34 +9,36 @@ app = Flask(__name__)
 
 @app.route('/chatbot/webhook/', methods=['POST'])
 def webhook():
-    data = request.json
-    print(f'EVENTO RECEBIDO: {data}')
+    try:
+        data = request.json
+        print(f'EVENTO RECEBIDO: {data}')
 
-    waha = Waha()
-    ai_bot = AIbot()
+        waha = Waha()
+        ai_bot = AIbot()
 
-    chat_id = data["payload"]["from"]
-    received_message = data["payload"]["body"]
-    is_group = '@g.us' in chat_id
-    is_status = 'status@broadcast' in chat_id 
+        chat_id = data["payload"]["from"]
+        received_message = data["payload"]["body"]
+        is_group = '@g.us' in chat_id
+        is_status = 'status@broadcast' in chat_id 
 
-    if is_group or is_status:
-        return jsonify({'status': 'success', 'message': 'Mesnagem de grupo/ststus ignorada.'}), 200
+        if is_group or is_status:
+            return jsonify({'status': 'success', 'message': 'Mesnagem de grupo/ststus ignorada.'}), 200
 
-    waha.start_typing(chat_id=chat_id)
+        waha.start_typing(chat_id=chat_id)
 
 
-    response = ai_bot.invoke(question=received_message)
+        response = ai_bot.invoke(question=received_message)
 
-    waha.send_message(
-        chat_id=chat_id, 
-        message = response,
-    )
+        waha.send_message(
+            chat_id=chat_id, 
+            message = response,
+        )
 
-    waha.stop_typing(chat_id=chat_id)
-        
-    return jsonify({'status': 'success'}), 200
-
+        waha.stop_typing(chat_id=chat_id)
+            
+        return jsonify({'status': 'success'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     #app.run(ssl_context=('path/to/cert.pem', 'path/to/key.pem'))
